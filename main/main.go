@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	controller "forum/controller"
-	model "forum/model"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+
+	controller "forum/controller"
+	model "forum/model"
 )
 
 // Whatever needs to load before the server starts (Files/APIs)
@@ -17,8 +18,8 @@ func init() {
 	model.DatabaseLoader()
 	model.GetCategories()
 	model.GetPosts()
-
 }
+
 func main() {
 	const port = ":8080"
 	var err error
@@ -29,6 +30,7 @@ func main() {
 	}
 	http.HandleFunc("/", controller.MainHandler)
 	fmt.Println("http://localhost" + port)
+	http.HandleFunc("/recieve-code", controller.HandlerRecieveCode)
 	http.HandleFunc("/createcategory", controller.HandlerCreateCategory)
 	http.HandleFunc("/postpage/", controller.HandlerPostPage)
 	http.HandleFunc("/logout/", controller.HandlerLogout)
