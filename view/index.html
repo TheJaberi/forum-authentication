@@ -170,7 +170,7 @@
                                     // Call the function when the page loads
                                     window.onload = extractCode;
                                     function sendCodeToServer(code) {
-                                        fetch('/receive-code', { // Your server endpoint that will handle the code
+                                        fetch('/recieve-code', { // Your server endpoint that will handle the code
                                             method: 'POST',
                                             headers: {
                                                 'Content-Type': 'application/json',
@@ -200,8 +200,55 @@
                                     }
                                 </script>
                             </a>
-                            <a href="" class="btn"><span>
-                                    Login with Google (Coming Soon)</span></a><br><br>
+                            <a href="" class="btn">
+                                <script src="https://accounts.google.com/gsi/client" async></script>
+                                <div id="g_id_onload"
+                                    data-client_id="491075035541-cu5k5aa9a6sn6qb9p4ki3l4ugflfif89.apps.googleusercontent.com"
+                                    data-context="signIn" data-ux_mode="popup" data-callback="signIn"
+                                    data-auto_prompt="false">
+                                </div>
+
+                                <div class="g_id_signin" data-type="standard" data-shape="rectangular"
+                                    data-theme="outline" data-text="signin_with" data-size="large" data-locale="en-GB"
+                                    data-logo_alignment="left">
+                                </div>
+
+                                <script>
+                                    function signIn(response) {
+                                        console.log(response);
+                                        // decodeJwtResponse() is a custom function defined by you
+                                        // to decode the credential response.
+                                        function decodeJwtResponse(jwtToken) {
+                                            // Split the token into its three parts: header, payload, and signature
+                                            const parts = jwtToken.split('.');
+
+                                            // Check if token has payload (it should)
+                                            if (parts.length === 3) {
+                                                // Decode the payload (middle part)
+                                                const decodedPayload = atob(parts[1]);
+
+                                                // Parse the JSON string to access the claims
+                                                const payloadObject = JSON.parse(decodedPayload);
+
+                                                // Return the payload object
+                                                return payloadObject;
+                                            } else {
+                                                // Return null or throw an error if token format is invalid
+                                                return null;
+                                            }
+                                        }
+                                        const responsePayload = decodeJwtResponse(response.credential);
+
+                                        console.log("ID: " + responsePayload.sub);
+                                        console.log('Full Name: ' + responsePayload.name);
+                                        console.log('Given Name: ' + responsePayload.given_name);
+                                        console.log('Family Name: ' + responsePayload.family_name);
+                                        console.log("Image URL: " + responsePayload.picture);
+                                        console.log("Email: " + responsePayload.email);
+
+                                    }
+                                </script>
+                            </a><br><br>
                             <button type="submit" class="btn btn-red">Log in</button>
                         </form>
                     </div><br><br>
