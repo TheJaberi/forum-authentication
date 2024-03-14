@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="/css/postpage.css" />
+    <link rel="stylesheet" href="/css/general.css" />
+    <link rel="stylesheet" href="/css/header.css" />
+    <link rel="stylesheet" href="/css/footer.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src=""></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <title>Reboot Journal</title>
+  </head>
+  <!------------------------ NAVBAR / HOME BUTTON (header.css) ------------------------>
+
+  <a href="/">
+    <header class="header" id="header"></header>
+  </a>
+  <!------------------------ POSTPAGE CONTENT ------------------------>
+  <body>
+    <!---------------------- POST SECTION ---------------------->
+    <div class="tagBar">
+      Tags:<span>&nbsp;&nbsp;</span> {{range
+      .Category}}{{.CategoryName}}<span>&nbsp;&nbsp;</span>{{end}}
+    </div>
+
+    <div class="postContainer">
+      <h1>{{.Title}}</h1>
+      <br />
+      <h2>{{.Body}}</h2>
+      <br /><br />
+      <div class="postAuthor">Posted by {{.Username}}</div>
+      <br />
+      <!-- POST LIKE & DISLIKE BUTTONS -->
+      <!-- USER VIEW -->
+      {{ if .LoggedUser }}
+      <div>
+        <!-- USER HAS LIKE -->
+        {{ if .Userlike }}
+        <div class="btnWrapper">
+          <div class="btnBox">
+            <div class="btnIconsActive">
+              <span class="like">{{.Likes}}</span>
+              <form method="GET" action="/like">
+                <button
+                  class="btn"
+                  name="removeInteraction"
+                  id="removeInteraction"
+                  value="{{.PostID}}"
+                >
+                  <i class="fa-regular fa-thumbs-up"></i>
+                </button>
+              </form>
+            </div>
+            <div class="btnIcons">
+              <form method="GET" action="/dislike">
+                <button
+                  class="btn"
+                  name="postInteraction"
+                  id="postInteraction"
+                  value="{{.PostID}}"
+                >
+                  <i class="fa-regular fa-thumbs-down"></i>
+                </button>
+              </form>
+              <span class="dislike">{{.Dislikes}}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- USER HAS DISLIKE -->
+        {{else}} {{if .UserDislike}}
+        <div class="btnWrapper">
+          <div class="btnBox">
+            <div class="btnIcons">
+              <span class="like">{{.Likes}}</span>
+              <form method="GET" action="/like">
+                <button
+                  class="btn"
+                  name="postInteraction"
+                  id="postInteraction"
+                  value="{{.PostID}}"
+                >
+                  <i class="fa-regular fa-thumbs-up"></i>
+                </button>
+              </form>
+            </div>
+            <div class="btnIconsActive">
+              <form method="GET" action="/dislike">
+                <button
+                  class="btn"
+                  name="removeInteraction"
+                  id="removeInteraction"
+                  value="{{.PostID}}"
+                >
+                  <i class="fa-regular fa-thumbs-down"></i>
+                </button>
+              </form>
+              <span class="dislike">{{.Dislikes}}</span>
+            </div>
+          </div>
+        </div>
+        <!-- USER DOESN'T HAVE POST INTERACTION -->
+        {{else}}
+        <div class="btnWrapper">
+          <div class="btnBox">
+            <div class="btnIcons">
+              <span class="like">{{.Likes}}</span>
+              <form method="GET" action="/like">
+                <button
+                  class="btn"
+                  name="postInteraction"
+                  id="postInteraction"
+                  value="{{.PostID}}"
+                >
+                  <i class="fa-regular fa-thumbs-up"></i>
+                </button>
+              </form>
+            </div>
+            <div class="btnIcons">
+              <form method="GET" action="/dislike">
+                <button
+                  class="btn"
+                  name="postInteraction"
+                  id="postInteraction"
+                  value="{{.PostID}}"
+                >
+                  <i class="fa-regular fa-thumbs-down"></i>
+                </button>
+              </form>
+              <span class="dislike">{{.Dislikes}}</span>
+            </div>
+          </div>
+        </div>
+        {{end}} {{end}}
+      </div>
+      <!-- GUEST MODE -->
+      {{else}}
+      <br />
+      <div class="btnWrapper">
+        <div class="btnBox">
+          <div class="btnIcons">
+            <span class="like">{{.Likes}}</span>
+            <form method="GET" action="/like">
+              <button
+                class="btn"
+                name="postInteraction"
+                id="postInteraction"
+                value="{{.PostID}}"
+                disabled
+              >
+                <i class="fa-regular fa-thumbs-up"></i>
+              </button>
+            </form>
+          </div>
+          <div class="btnIcons">
+            <form method="GET" action="/dislike">
+              <button
+                class="btn"
+                name="postInteraction"
+                id="postInteraction"
+                value="{{.PostID}}"
+                disabled
+              >
+                <i class="fa-regular fa-thumbs-down"></i>
+              </button>
+            </form>
+            <span class="dislike">{{.Dislikes}}</span>
+          </div>
+        </div>
+      </div>
+      {{end}}
+    </div>
+    <br /><br />
+    <!------------------------ COMMENTS SECTION ------------------------>
+    <!--  ADD COMMENT BOX -->
+    {{ if .LoggedUser }}
+    <div>
+      <div class="addCommentBox" id="addCommentBox">
+        <form method="post" action="/comment">
+          <textarea
+            name="commentContent"
+            id="commentContent"
+            rows="2"
+            cols="56"
+            placeholder="Add your comment..."
+            required="true"
+            maxlength="2000"
+          ></textarea
+          ><br />
+          <button name="postid" id="postid" value="{{.PostID}}">Submit</button>
+        </form>
+        <br />
+      </div>
+    </div>
+    {{else}} {{end}}
+    <!-- VIEW COMMENTS -->
+    {{range .Comments}}
+    <div class="commentContainer">
+      <div class="commentWrapper">
+        <div class="commentBox">
+          <div class="commentDetails">
+            <h3>{{.CommentUsername}}:</h3>
+          </div>
+        </div>
+        <div class="commentBox">
+          <div class="commentDetails">
+            <h4>{{.TimeCreated}}</h4>
+          </div>
+        </div>
+      </div>
+
+      <h4 style="text-align: left; color: whitesmoke; padding: 5%;white-space: pre-line">
+        {{.Body}}
+      </h4>
+
+      <!-- COMMENT LIKE & DISLIKE BUTTONS -->
+      <!-- USER VIEW -->
+      {{ if .CommentLoggedUser }}
+      <div>
+        <!-- USER HAS LIKE -->
+        {{ if .CommentUserlike }}
+        <div class="btnWrapper">
+          <div class="btnBox">
+            <div class="btnIconsActive">
+              <span class="like">{{.Likes}}</span>
+              <form method="GET" action="/commentlike/">
+                <button
+                  class="btn"
+                  name="removeInteraction"
+                  id="removeInteraction"
+                  value="{{.Comment_id}}"
+                >
+                  <i class="fa-regular fa-thumbs-up"></i>
+                </button>
+              </form>
+            </div>
+            <div class="btnIcons">
+              <form method="GET" action="/commentdislike/">
+                <button
+                  class="btn"
+                  name="commentInteraction"
+                  id="commentInteraction"
+                  value="{{.Comment_id}}"
+                >
+                  <i class="fa-regular fa-thumbs-down"></i>
+                </button>
+              </form>
+              <span class="dislike">{{.Dislikes}}</span>
+            </div>
+          </div>
+        </div>
+        <!-- USER HAS DISLIKE -->
+        {{else}} {{ if .CommentUserDislike }}
+        <div class="btnWrapper">
+          <div class="btnBox">
+            <div class="btnIcons">
+              <span class="like">{{.Likes}}</span>
+              <form method="GET" action="/commentlike/">
+                <button
+                  class="btn"
+                  name="commentInteraction"
+                  id="commentInteraction"
+                  value="{{.Comment_id}}"
+                >
+                  <i class="fa-regular fa-thumbs-up"></i>
+                </button>
+              </form>
+            </div>
+            <div class="btnIconsActive">
+              <form method="GET" action="/commentdislike/">
+                <button
+                  class="btn"
+                  name="removeInteraction"
+                  id="removeInteraction"
+                  value="{{.Comment_id}}"
+                >
+                  <i class="fa-regular fa-thumbs-down"></i>
+                </button>
+              </form>
+              <span class="dislike">{{.Dislikes}}</span>
+            </div>
+          </div>
+        </div>
+        {{else}}
+        <!-- USER DOESN'T HAVE COMMENT INTERACTIONS -->
+        <div class="btnWrapper">
+          <div class="btnBox">
+            <div class="btnIcons">
+              <span class="like">{{.Likes}}</span>
+              <form method="GET" action="/commentlike/">
+                <button
+                  class="btn"
+                  name="commentInteraction"
+                  id="commentInteraction"
+                  value="{{.Comment_id}}"
+                >
+                  <i class="fa-regular fa-thumbs-up"></i>
+                </button>
+              </form>
+            </div>
+            <div class="btnIcons">
+              <form method="GET" action="/commentdislike/">
+                <button
+                  class="btn"
+                  name="commentInteraction"
+                  id="commentInteraction"
+                  value="{{.Comment_id}}"
+                >
+                  <i class="fa-regular fa-thumbs-down"></i>
+                </button>
+              </form>
+              <span class="dislike">{{.Dislikes}}</span>
+            </div>
+          </div>
+        </div>
+        {{end}} {{end}}
+      </div>
+      <!-- GUEST VIEW -->
+      {{else}}
+      <br />
+      <div class="btnWrapper">
+        <div class="btnBox">
+          <div class="btnIcons">
+            <span class="like">{{.Likes}}</span>
+            <form method="GET" action="/commentlike/">
+              <button
+                class="btn"
+                name="commentInteraction"
+                id="commentInteraction"
+                value="{{.Comment_id}}"
+                disabled
+              >
+                <i class="fa-regular fa-thumbs-up"></i>
+              </button>
+            </form>
+          </div>
+          <div class="btnIcons">
+            <form method="GET" action="/commentdislike/">
+              <button
+                class="btn"
+                name="commentInteraction"
+                id="commentInteraction"
+                value="{{.Comment_id}}"
+                disabled
+              >
+                <i class="fa-regular fa-thumbs-down"></i>
+              </button>
+            </form>
+            <span class="dislike">{{.Dislikes}}</span>
+          </div>
+        </div>
+      </div>
+      {{end}}
+    </div>
+    {{end}}
+    <br /><br />
+    <!-- BACK HOME BUTTON & FOOTER -->
+    <a class="buttonback" href="/"> Home </a>
+    <br /><br />
+    <footer>
+      <div class="container">
+        <p>Created By: H4A</p>
+        <p>
+          Any sufficiently advanced technology is indistinguishable from magic.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
+<script>
+  (function () {
+    var scrollPosition; // Variable to store scroll position
+
+    window.onpageshow = function (event) {
+      if (event.persisted) {
+        window.scrollTo(0, scrollPosition);
+      }
+    };
+  })();
+  src = "https://kit.fontawesome.com/9e5ba2e3f5.js";
+  src = "/js/postpage.js";
+  crossorigin = "anonymous";
+  const firstNameInput = document.getElementById("commentContent");
+  firstNameInput.value = "";
+  if (location.href !== "http://localhost:{{.Port}}/postpage/?id={{.PostID}}") {
+    // history.back() = "http://localhost:{{.Port}}/"
+    window.location.replace(
+      "http://localhost:{{.Port}}/postpage/?id={{.PostID}}"
+    );
+  }
+  window.addEventListener("scroll", (event) => {
+    let scroll = this.scrollY;
+    // console.log(scroll)
+  });
+</script>

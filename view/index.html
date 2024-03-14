@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/general.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <title>Reboot Journal</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<body>
+    <header class="header" id="header">
+        <div class="row">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <a href="/">
+                            <h2>Reboot01 Forum</h2>
+                        </a>
+                    </div>
+                    {{if .IsLogged}}
+                    <div class="logo" style="width: 500px;">
+                        <p class="WelcomeUser">Welcome {{.LoggedUser.Username}} <span>&nbsp;&nbsp;</span><a
+                                href="/logout"><i class="fa fa-sign-out"></i>LogOut</a></p>
+                    </div>
+                    {{end}}
+                    <div class="nav-group">
+                        <ul>
+                            {{if .IsLogged}}
+                            <li class="createpost">
+                                <a><i class="fa-solid fa-comment"></i> Create Post</a>
+                            </li>
+                            {{if .TypeAdmin}}
+                            <li class="createcategory">
+                                <a><i class="fa-solid fa-comment"></i> Create Category</a>
+                            </li>
+                            {{end}}
+                            <li class="join"></li>
+                            {{else}}
+                            <li class="join">
+                                <a>
+                                    <i class="fa-solid fa-user"></i>
+                                    Login / Join
+                                </a>
+                            </li>
+                            {{end}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    </header>
+    <main>
+        {{if .TypeAdmin}}
+        <div class="overlaycatogaries">
+            <div class="postbox" id="postbox">
+                <form method="post" action="/createcategory">
+                    Category Name <textarea name="category" id="title" placeholder="Category Name (max 35 characters)"
+                        rows="1" cols="35" required="true" maxlength="35"></textarea>
+                    <button class="downl-btn" id="format" name="format" value="txt">Create Category</button><i
+                        class="fa-solid fa-xmark close"></i>
+            </div>
+            </form>
+        </div>
+        {{end}}
+        <div class="container">
+            <div class="row">
+                <section class="left">
+
+                    <h2>Categories</h2>
+                    <ul class="dropdown">
+                        {{range .AllCategories}}<li><a href="/?category={{.CategoryID}}">{{.CategoryName}}</a></li>
+                        {{end}}
+                    </ul>
+                </section>
+
+                <section class="right">
+                    {{range .AllPosts}}
+
+                    <div class="box">
+                        <a href="/postpage?id={{.PostID}}">
+                            <img src="">
+                            <div class="details">
+
+                                <h1>
+                                    <option value="{{.}}">{{.Title}}</option>
+                                </h1>
+                                <div class="categories">Categories:<span>&nbsp;&nbsp;</span>{{range .Category}} <option
+                                        value="{{.}}">
+                                        <h6>{{ .CategoryName}}</h6>
+                                    </option><span>&nbsp;</span>{{end}}</div>
+                                <span>Created on:<span>&nbsp;&nbsp;</span>
+                                    <h6>{{.TimeCreated}}</h6>
+                                </span><br>
+                                <span>Created by:<span>&nbsp;&nbsp;</span>
+                                    <h6>{{.Username}}</h6>
+                                </span>
+                                <div class="sub-details">
+                                    <i class="fa-solid fa-comment"></i><span>{{.NumbOfComments}}</span>
+                                    <i class="fa fa-thumbs-up"></i><span>{{.Likes}}</span>
+                                    <i class="fa fa-thumbs-down"></i><span>{{.Dislikes}}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {{end}}
+                </section>
+                <section class="center">
+
+                    <h2>Sort By</h2>
+                    <ul class="dropdown">
+                        {{if .IsLogged}}
+                        <li><a href="/?sortby=mylikes">MY LIKES</a></li>
+                        <li><a href="/?sortby=mydislikes">MY DISLIKES</a></li>
+                        <li><a href="/?sortby=myposts">MY POSTS</a></li>
+                        {{end}}
+                        <li><a href="/">NEWEST</a></li>
+                        <li><a href="/?sortby=oldest">OLDEST</a></li>
+                        <li><a href="/?sortby=mostliked">MOST LIKED</a></li>
+                        <li><a href="/?sortby=mostdisliked">MOST DISLIKED</a></li>
+                        <li><a href="/?sortby=mostcommentedon">MOST COMMENTED ON</a></li>
+
+                </section>
+            </div>
+        </div>
+    </main>
+    <!-- add creators data in Footer -->
+    <footer>
+        <div class="container">
+            <p>Created By: H4A</p>
+            <p>Any sufficiently advanced technology is indistinguishable from magic.</p>
+        </div>
+    </footer>
+    <div class="overlay">
+        <div class="login" id="login">
+            <div class="top">
+                <h2>Log in</h2><span>&nbsp;</span>
+                <i class="fa-solid fa-xmark close"></i>
+            </div>
+            <div class="row">
+                <div class="content">
+                    <div class="login-left">
+                        <form method="POST" action="/login">
+                            <input id="loginemail" type="email" name="email" autocomplete="off" required class="input"
+                                title="Enter your Email!" />
+                            <label class="user-email">Email Address</label>
+                            <div class="form-group">
+                                <input type="password" name="password" id="passIn" autocomplete="off" class="input"
+                                    minlength="6" maxlength="25" required
+                                    title="Your password must be between 6 to 25 long" />
+                                <label class="user-pass">Password</label>
+                            </div>
+                            <a href="" class="btn">
+
+                                <a
+                                    href="https://github.com/login/oauth/authorize?client_id=7e5c9074f38b520b3e48&scope=user">Login
+                                    with GitHub</a>
+                                <script>
+                                    // Function to extract the code from the URL
+                                    function extractCode() {
+                                        const urlParams = new URLSearchParams(window.location.search);
+                                        const code = urlParams.get('code');
+                                        return code;
+                                        // console.log('Authorization code:', code);
+                                    }
+
+                                    // Call the function when the page loads
+                                    window.onload = extractCode;
+                                    function sendCodeToServer(code) {
+                                        fetch('/receive-code', { // Your server endpoint that will handle the code
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            },
+                                            body: JSON.stringify({ code: code }),
+                                        })
+                                            .then(response => {
+                                                if (!response.ok) {
+                                                    throw new Error('Network response was not ok');
+                                                }
+                                                return response.json();
+                                            })
+                                            .then(data => {
+                                                console.log('Success:', data);
+                                                // Handle success response
+                                            })
+                                            .catch((error) => {
+                                                console.error('Error:', error);
+                                            });
+                                    }
+
+                                    const authCode = extractCode();
+                                    if (authCode) {
+                                        sendCodeToServer(authCode);
+                                    } else {
+                                        console.log('Authorization code not found in the URL');
+                                    }
+                                </script>
+                            </a>
+                            <a href="" class="btn"><span>
+                                    Login with Google (Coming Soon)</span></a><br><br>
+                            <button type="submit" class="btn btn-red">Log in</button>
+                        </form>
+                    </div><br><br>
+                    <div class="login-right">
+                        <h2>Register</h2>
+                        <form method="POST" action="/register">
+                            <input type="email" name="email" id="email" autocomplete="off" class="input"
+                                title="Enter your Email!" />
+                            <label class="user-email">Email Address</label>
+                            <div class="form-group">
+                                <input type="text" name="username" autocomplete="off" class="input" minlength="3"
+                                    maxlength="14" title="Your username must be between 3 to 14 long" />
+                                <label class="user-name">Username</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="password" id="passIn" autocomplete="off" class="input"
+                                    minlength="6" maxlength="25" title="Your password must be between 6 to 25 long" />
+                                <label class="user-pass">Password</label>
+                            </div><br>
+                            <button type="submit" class="btn btn-red">Join Now</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="overlayposts">
+        <div class="postbox" id="postbox">
+            <form method="post" action="/post">
+                Post Title <textarea name="title" id="title" placeholder=" Title (max 35 characters)" rows="1" cols="35"
+                    required="true" maxlength="35"></textarea><i class="fa-solid fa-xmark close"></i><br>
+                Post Body<textarea name="post" id="post" rows="15" cols="150" placeholder="(max 2000 characters)"
+                    required="true" maxlength="2000"></textarea>
+                Category:{{range .AllCategories}}<span>&nbsp;</span>
+                <input type="checkbox" name="{{.CategoryID}}" id="{{.CategoryName}}"
+                    value="{{.CategoryID}}"><span>&nbsp;</span><label
+                    for="{{.CategoryName}}">{{.CategoryName}}{{end}}</label><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+                <button class="downl-btn" id="format" name="format" value="txt">Create post</button>
+        </div>
+        </form>
+    </div>
+    <div class="errormsg" value="{{.LoginErrorMsg}}"></div>
+    <div class="posterrormsg" value="{{.PostErrorMsg}}"></div>
+    <script>
+        (function () {
+            window.onpageshow = function (event) {
+                if (event.persisted) {
+                    window.location.reload();
+                }
+            };
+        })();
+
+        crossorigin = "anonymous"
+        if (location.href === ("http://localhost:{{.Port}}/post") || location.href === ("http://localhost:{{.Port}}/register") || location.href === ("http://localhost:{{.Port}}/logout/") ||
+            location.href === ("http://localhost:{{.Port}}/createcategory") || location.href === ("http://localhost:{{.Port}}/login")) {
+            window.location.replace("http://localhost:{{.Port}}")
+        }
+    </script>
+    <script src="https://kit.fontawesome.com/9e5ba2e3f5.js"></script>
+    <script src="js/index.js"></script>
+    {{if .LoginError}}
+    <script>
+        document.querySelector(".overlay").classList.add("active")
+        const errormsg = document.querySelector(".errormsg").getAttribute("value")
+        alert(errormsg)
+        window.location.replace("http://localhost:{{.Port}}/")
+    </script>
+    {{end}}
+    {{if .PostError}}
+    <script>
+        document.querySelector(".overlayposts").classList.add("active")
+        const posterrormsg = document.querySelector(".posterrormsg").getAttribute("value")
+        alert(posterrormsg)
+        window.location.replace("http://localhost:{{.Port}}/")
+    </script>
+    {{end}}
+</body>
+
+</html>

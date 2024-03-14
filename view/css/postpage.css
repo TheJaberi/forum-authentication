@@ -1,0 +1,275 @@
+h1 {
+  font-size: 6rem;
+  text-align: center;
+}
+
+h2 {
+  width: 100%;
+  text-align: justify;
+  color: whitesmoke;
+  white-space: pre-line
+}
+
+body {
+  text-align: center;
+  color: var(--aquaColor);
+  background-color: var(--blackColor);
+  align-content: center;
+  width: 100%;
+  word-wrap: break-word;
+}
+
+/* TAG BAR AT TOP SECTION */
+
+.tagBar {
+  text-align: left;
+  width: 80%;
+  display: inline-block;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  color: var(--aquaColor);
+  font-weight: 500;
+}
+
+/* POST CONTENT SECTION */
+
+.postContainer {
+  background-color: var(--lightBlackColor);
+  box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.11),
+    0 0.1rem 0.1rem rgba(0, 0, 0, 0.04);
+  width: 85%;
+  padding: 1.3rem 1.7rem;
+  display: inline-block;
+  text-align: center;
+  align-items: center;
+  align-content: center;
+  border: 1px solid #000;
+  border-radius: 1.7rem;
+    min-width: 40rem;
+}
+
+.postAuthor {
+  font-size: large;
+  color: var(--aquaColor);
+  font-weight: 900;
+  text-align: right;
+}
+
+/* ADD NEW COMMENT SECTION */
+
+.addCommentBox {
+  font-size: large;
+  width: 57%;
+  color: var(--aquaColor);
+  font-weight: 900;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  align-items: center;
+  align-content: center;
+}
+
+.addCommentBox button {
+  font-size: large;
+  background-color: rgb(0, 0, 0);
+  color: var(--aquaColor);
+  font-weight: 400;
+  border-radius: 22px;
+  padding: 11px 22px;
+  border: 1cap;
+  cursor: pointer;
+}
+
+.addCommentBox button:hover {
+  background-color: var(--aquaColor);
+  color: #000;
+  cursor: pointer;
+}
+
+.addCommentBox button:active {
+  position: inline-flex;
+  background-color: var(--aquaColor);
+  color: #000;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+textarea {
+  border-radius: 1.2rem;
+  padding: 10px;
+  font-size: large;
+  background-color: #222;
+  color: var(--aquaColor);
+  font-weight: 900;
+  width: 100%;
+  max-width: 107rem;
+}
+
+button i {
+  cursor: pointer;
+}
+
+button i:hover {
+  color: var(--aquaColor);
+  cursor: pointer;
+  transition: 0.2s ease;
+  opacity: 0.5;
+}
+
+/* COMMENTS SECTION */
+
+.commentContainer {
+  display: inline-block;
+  text-align: center;
+  align-items: center;
+  align-content: center;
+  background-color: var(--lightBlackColor);
+  padding: 0.9rem 1.2rem;
+  border-radius: 1.7rem;
+  margin-bottom: 0.9rem;
+  box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.11),
+    0 0.1rem 0.1rem rgba(0, 0, 0, 0.04);
+  width: 57%;
+  max-width: 110rem;
+  min-width: 40rem;
+  min-height: 200px;
+  /* float: left; */
+  word-wrap: break-word;
+  border: 1px solid #000;
+}
+
+.commentContainer h5 {
+  margin-top: 3rem;
+}
+
+.commentWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.commentBox {
+  float: left;
+  display: flex;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.commentDetails {
+  margin: 10px 10px;
+}
+
+/* LIKE / DISLIKE BUTTON SECTIONS */
+
+.btnWrapper {
+  width: 300px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: default;
+  color: #00f7ff;
+  margin: auto;
+  padding: 10px;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.btnBox {
+  display: flex;
+}
+
+.btnIcons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 8px;
+  padding: 0 8px;
+  cursor: pointer;
+  background: #222;
+  border: 2px solid gainsboro;
+  color: gainsboro;
+  border-radius: 50px;
+  transition: 0.2s ease;
+}
+
+.btnIconsActive {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 8px;
+  padding: 0 8px;
+  cursor: pointer;
+  background: #222;
+  border: 2px solid var(--aquaColor);
+  color: var(--aquaColor);
+  border-radius: 50px;
+  transition: 0.2s ease;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  border: none;
+  color: inherit;
+}
+
+.btn i {
+  font-size: 2rem;
+  width: 20px;
+  box-sizing: content-box;
+  padding: 10px;
+  transition: 0.2s ease;
+  color: inherit;
+  transform: scale(1);
+  visibility: visible;
+  cursor: pointer;
+}
+
+.like {
+  width: 75px;
+  border-right: inherit;
+  padding: 0 10px 0 8px;
+  pointer-events: none;
+  visibility: visible;
+}
+
+.dislike {
+  width: 75px;
+  border-left: inherit;
+  padding: 0 8px 0 10px;
+  pointer-events: none;
+  visibility: visible;
+}
+
+/* BACK HOME BUTTON */
+
+.buttonback {
+  font-size: large;
+  background-color: rgb(0, 0, 0);
+  color: var(--aquaColor);
+  font-weight: 400;
+  border-radius: 22px;
+  padding: 11px 22px;
+  cursor: pointer;
+}
+
+.buttonback:hover {
+  background-color: var(--aquaColor);
+  color: #000;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+    /* 
+    box shadow for future reference
+    background: #013c4b;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    */
