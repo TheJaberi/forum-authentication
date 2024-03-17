@@ -30,7 +30,8 @@ func main() {
 	}
 	http.HandleFunc("/", controller.MainHandler)
 	fmt.Println("http://localhost" + port)
-	http.HandleFunc("/recieve-code", controller.HandlerRecieveCode)
+	http.HandleFunc("/receive-code/github", controller.HandlerReceiveCodeGithub)
+	http.HandleFunc("/receive-code/google", controller.HandlerReceiveCodeGoogle)
 	http.HandleFunc("/createcategory", controller.HandlerCreateCategory)
 	http.HandleFunc("/postpage/", controller.HandlerPostPage)
 	http.HandleFunc("/logout/", controller.HandlerLogout)

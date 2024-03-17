@@ -170,7 +170,7 @@
                                     // Call the function when the page loads
                                     window.onload = extractCode;
                                     function sendCodeToServer(code) {
-                                        fetch('/recieve-code', { // Your server endpoint that will handle the code
+                                        fetch('/receive-code/github', { // Your server endpoint that will handle the code
                                             method: 'POST',
                                             headers: {
                                                 'Content-Type': 'application/json',
@@ -245,6 +245,18 @@
                                         console.log('Family Name: ' + responsePayload.family_name);
                                         console.log("Image URL: " + responsePayload.picture);
                                         console.log("Email: " + responsePayload.email);
+
+                                        // Send the responsePayload to your server
+                                        fetch('/receive-code/google', { // Update this URL to your endpoint
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            },
+                                            body: JSON.stringify(responsePayload),
+                                        })
+                                            .then(response => response.json())
+                                            .then(data => console.log('Success:', data))
+                                            .catch((error) => console.error('Error:', error));
 
                                     }
                                 </script>

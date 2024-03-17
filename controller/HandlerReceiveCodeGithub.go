@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -17,8 +16,8 @@ const (
 	CLIENT_SECRET = "959bed0370ec86564dea2c3f8f8ab84420b147be"
 )
 
-func HandlerRecieveCode(w http.ResponseWriter, req *http.Request) {
-	if req.URL.Path != "/recieve-code" {
+func HandlerReceiveCodeGithub(w http.ResponseWriter, req *http.Request) {
+	if req.URL.Path != "/receive-code/github" {
 		ErrorHandler(w, req, http.StatusNotFound)
 		return
 	}
@@ -65,7 +64,7 @@ func HandlerRecieveCode(w http.ResponseWriter, req *http.Request) {
 	// fmt.Println(resp)
 
 	// Read the response body
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -122,7 +121,9 @@ func FetchUserInformation(accessToken string) (map[string]interface{}, error) {
 	if err := json.Unmarshal(body, &userInfo); err != nil {
 		return nil, err
 	}
-	fmt.Println(userInfo["login"])
+	fmt.Print("Received Github Auth for user: ")
+	fmt.Print(userInfo["login"])
+	fmt.Print(" with email: ")
 	// fmt.Println(userInfo)
 	// fmt.Println(userInfo["login"])
 	return userInfo, nil
@@ -156,7 +157,7 @@ func FetchPrivateEmails(accessToken string) ([]map[string]interface{}, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
