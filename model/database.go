@@ -27,6 +27,7 @@ func UsersTable(db *sql.DB) {
 		user_pass PASSWORD NOT NULL,
 		user_type TEXT NOT NULL DEFAULT member,
 		time_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		reg_type TEXT NOT NULL DEFAULT 0,
 		PRIMARY KEY("user_id" AUTOINCREMENT)
 	);`
 	usersTable, err := db.Prepare(query)
