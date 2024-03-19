@@ -3,6 +3,7 @@ package forum
 import (
 	"encoding/json"
 	"fmt"
+	m "forum/model"
 	"net/http"
 )
 
@@ -31,6 +32,13 @@ func HandlerReceiveCodeGoogle(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	cookie, err := m.UserLoginAuth(payload.Email, m.GooglePass, 1)
+	if err != nil {
+		m.LoginError2 = true
+	} else {
+		m.LoginError2 = false
+	}
+	http.SetCookie(w, cookie)
 	fmt.Printf("Received Google Auth for user: %s\n", payload.Email)
 
 	// Process the authentication payload as needed

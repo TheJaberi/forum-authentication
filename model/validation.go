@@ -10,7 +10,7 @@ func RegisterValidator(applicant Applicant) error {
 	if err != nil {
 		return err
 	}
-	if UserExistsDb(applicant.Email) == nil {
+	if UserExistsDb(applicant.Email, applicant.Reg_type) == nil {
 		return UserExistsError
 	}
 	err = passwordChecker(string(applicant.Password))

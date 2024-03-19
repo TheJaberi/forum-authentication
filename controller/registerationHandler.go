@@ -27,6 +27,7 @@ func HandlerRegister(w http.ResponseWriter, req *http.Request) {
 		Username: req.FormValue("username"),
 		Password: []byte(req.FormValue("password")),
 		Email:    req.FormValue("email"),
+		Reg_type: 0,
 	}
 	err = model.UserRegisteration(NewApplicant, model.DB)
 	if err != nil {

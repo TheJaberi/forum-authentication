@@ -122,6 +122,7 @@ func FetchUserInformation(accessToken string) (map[string]interface{}, error) {
 		return nil, err
 	}
 	fmt.Print("Received Github Auth for user: ")
+	fmt.Println(userInfo)
 	fmt.Print(userInfo["login"])
 	fmt.Print(" with email: ")
 	// fmt.Println(userInfo)

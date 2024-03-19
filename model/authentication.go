@@ -27,9 +27,9 @@ func UserRegisteration(applicant Applicant, db *sql.DB) error {
 }
 
 // Receive login credentials, validate and respond with a session cookie
-func UserLogin(email string, password string) (*http.Cookie, error) {
+func UserLogin(email string, password string, RegType int) (*http.Cookie, error) {
 	// Validate User Existance
-	if UserExistsDb(email) != nil {
+	if UserExistsDb(email, RegType) != nil {
 		AllData.LoginErrorMsg = UserEmailError.Error()
 		return BlankCookie, UserEmailError
 	}
@@ -63,4 +63,22 @@ func UserLogin(email string, password string) (*http.Cookie, error) {
 		return BlankCookie, err
 	}
 	return cookie, nil
+}
+
+func UserLoginAuth(email string, password string, RegType int) (*http.Cookie, error) {
+	// Validate User Existance
+	if UserExistsDb(email, RegType) == UserExistsError {
+		AllData.LoginErrorMsg = UserEmailError.Error()
+		return BlankCookie, UserEmailError
+	} else if UserExistsDb(email, RegType) != nil {
+		appicant := Applicant{Username: GUserName, Email: email, Password: []byte(password), Reg_type: RegType}
+		UserRegisteration(appicant, DB)
+	}
+
+	cookies, err := UserLogin(email, password, RegType)
+	if err != nil {
+		return nil, err
+	}
+
+	return cookies, nil
 }

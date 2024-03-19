@@ -9,12 +9,12 @@ import (
 
 // Insert new row into user table
 func UserInsertDb(applicant Applicant, db *sql.DB, pass []byte) error {
-	sqlStmt, err := db.Prepare("INSERT INTO users (user_name, user_email, user_pass, user_type) VALUES (?, ?, ?, ?)")
+	sqlStmt, err := db.Prepare("INSERT INTO users (user_name, user_email, user_pass, user_type, reg_type) VALUES (?, ?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
 	defer sqlStmt.Close()
-	_, err = sqlStmt.Exec(applicant.Username, applicant.Email, pass, "member")
+	_, err = sqlStmt.Exec(applicant.Username, applicant.Email, pass, "member", applicant.Reg_type)
 	if err != nil {
 		return err
 	}
@@ -22,14 +22,14 @@ func UserInsertDb(applicant Applicant, db *sql.DB, pass []byte) error {
 }
 
 // Check if email exists in user table
-func UserExistsDb(applicantEmail string) error {
-	sqlStmt := `SELECT EXISTS (SELECT 1 FROM users WHERE user_email = ?)`
-	var exists bool
+func UserExistsDb(applicantEmail string, RegType int) error {
+	sqlStmt := `SELECT reg_type FROM users WHERE user_email = ?`
+	var exists int
 	err := DB.QueryRow(sqlStmt, applicantEmail).Scan(&exists)
 	if err != nil {
 		return err
 	}
-	if !exists {
+	if exists != RegType {
 		return UserExistsError
 	}
 	return nil

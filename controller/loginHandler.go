@@ -23,7 +23,7 @@ func HandlerLogin(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	cookie, err := m.UserLogin(req.FormValue("email"), req.FormValue("password"))
+	cookie, err := m.UserLogin(req.FormValue("email"), req.FormValue("password"), 0)
 	if err != nil {
 		m.LoginError2 = true
 	} else {

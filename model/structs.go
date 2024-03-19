@@ -20,6 +20,9 @@ var (
 	Empty         User
 	LoginError2   bool
 	PostError2    bool
+	GooglePass    string = "google"
+	GithubPass    string = "github"
+	GUserName     string
 )
 
 type Data struct {
@@ -93,6 +96,7 @@ type Applicant struct {
 	Email    string
 	Password []byte
 	Type     string
+	Reg_type int
 }
 
 type Session struct {
