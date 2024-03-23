@@ -10,6 +10,13 @@ import (
 // Receive new user data, validate and insert in user table
 func UserRegisteration(applicant Applicant, db *sql.DB) error {
 	err := RegisterValidator(applicant)
+	if err == UserExistsError {
+		if applicant.Reg_type == 1 {
+			applicant.Username = applicant.Username + "(google)"
+		} else if applicant.Reg_type == 2 {
+			applicant.Username = applicant.Username + "(github)"
+		}
+	}
 	if err != nil {
 		AllData.LoginErrorMsg = err.Error()
 		return err
@@ -71,14 +78,24 @@ func UserLoginAuth(email string, password string, RegType int) (*http.Cookie, er
 		AllData.LoginErrorMsg = UserEmailError.Error()
 		return BlankCookie, UserEmailError
 	} else if UserExistsDb(email, RegType) != nil {
-		appicant := Applicant{Username: GUserName, Email: email, Password: []byte(password), Reg_type: RegType}
+		appicant := Applicant{Username:RemoveEmailDetails(email), Email: email, Password: []byte(password), Reg_type: RegType}
 		UserRegisteration(appicant, DB)
 	}
-
 	cookies, err := UserLogin(email, password, RegType)
 	if err != nil {
 		return nil, err
 	}
-
 	return cookies, nil
+}
+
+func RemoveEmailDetails(email string)string {
+	emailByte := []byte(email)
+	var finalUsername string
+	for i:=0;i<len(emailByte);i++{
+		if emailByte[i] == 64 {
+			break
+		}
+		finalUsername = finalUsername + string(emailByte[i])
+	}
+	return finalUsername
 }
