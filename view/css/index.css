@@ -289,6 +289,16 @@ margin-bottom: 0;
     padding-top: 3rem;
   }
 
+  .login .row .content .login-left form .btngithub {
+    color:black;
+    background-color: rgb(255, 255, 255);
+    margin-left: 13px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-bottom: 4px;
+    width: 216px;
+  }
+
   .login .row .content .login-left .btn-red,
   .login .row .content .login-right .btn-red {
     height: 2.8em;

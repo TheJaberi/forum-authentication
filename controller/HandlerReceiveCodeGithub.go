@@ -88,7 +88,6 @@ func HandlerReceiveCodeGithub(w http.ResponseWriter, req *http.Request) {
 	CheckScopes(tokenResponse.AccessToken, []string{"user:email"})
 	email, _,_ := FetchPrivateEmails(tokenResponse.AccessToken)
 	// Send a response back to the client indicating success
-	fmt.Println(username, "3 ", email)
 	cookie, err := m.UserLoginGithubAuth(username, email, m.GithubPass, 2)
 	if err != nil {
 		m.LoginError2 = true
@@ -99,7 +98,6 @@ func HandlerReceiveCodeGithub(w http.ResponseWriter, req *http.Request) {
 	jsonResponse := map[string]string{"status": "received", "access_token": tokenResponse.AccessToken}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(jsonResponse)
-	// http.Redirect(w, req, "/", http.StatusOK)
 }
 
 // FetchUserInformation fetches user information from GitHub using the access token
@@ -171,7 +169,5 @@ func FetchPrivateEmails(accessToken string) (string, []map[string]interface{}, e
 	if err := json.Unmarshal(body, &emails); err != nil {
 		return "", nil, err
 	}
-	fmt.Println(emails[0]["email"])
-
 	return fmt.Sprint(emails[0]["email"]), emails, nil
 }

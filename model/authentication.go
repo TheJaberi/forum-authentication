@@ -2,7 +2,6 @@ package forum
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 
 	bcrypt "golang.org/x/crypto/bcrypt"
@@ -75,11 +74,14 @@ func UserLogin(email string, password string, RegType int) (*http.Cookie, error)
 func UserLoginGoogleAuth(email string, password string, RegType int) (*http.Cookie, error) {
 	// Validate User Existance
 	if UserExistsDb(email, RegType) == UserExistsError {
-		AllData.LoginErrorMsg = UserEmailError.Error()
+		AllData.LoginErrorMsg = UserExistsError.Error()
 		return BlankCookie, UserEmailError
 	} else if UserExistsDb(email, RegType) != nil {
 		appicant := Applicant{Username:RemoveEmailDetails(email), Email: email, Password: []byte(password), Reg_type: RegType}
-		UserRegisteration(appicant, DB)
+		err := UserRegisteration(appicant, DB)
+		if err !=nil{
+			AllData.LoginErrorMsg = err.Error()
+		}
 	}
 	cookies, err := UserLogin(email, password, RegType)
 	if err != nil {
@@ -92,7 +94,6 @@ func UserLoginGithubAuth(username string, email string, password string, RegType
 	// Validate User Existance
 	if UserExistsDb(email, RegType) == UserExistsError {
 		AllData.LoginErrorMsg = UserExistsError.Error()
-		fmt.Println("check1")
 		return BlankCookie, UserEmailError
 	} else if UserExistsDb(email, RegType) != nil {
 		appicant := Applicant{Username: username, Email: email, Password: []byte(password), Reg_type: RegType}
@@ -109,7 +110,10 @@ func RemoveEmailDetails(email string)string {
 	emailByte := []byte(email)
 	var finalUsername string
 	for i:=0;i<len(emailByte);i++{
-		if emailByte[i] == 64 {
+		if (emailByte[i] < 47 || emailByte[i] > 122){
+			continue
+		}			
+		if emailByte[i] == 64 || i == 13{
 			break
 		}
 		finalUsername = finalUsername + string(emailByte[i])

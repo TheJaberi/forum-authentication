@@ -1,6 +1,7 @@
 package forum
 
 import (
+	"fmt"
 	"regexp"
 )
 
@@ -19,7 +20,8 @@ func RegisterValidator(applicant Applicant) error {
 	}
 	err = nameChecker(applicant.Username)
 	if err != nil {
-		return UserNameError
+		fmt.Println("tesetsetset")
+		return err
 	}
 	if UsernameExistsDb(applicant.Username) == nil {
 		return UsernameExistsError

@@ -153,11 +153,10 @@
                                     title="Your password must be between 6 to 25 long" />
                                 <label class="user-pass">Password</label>
                             </div>
-                            <a href="" class="btn">
-
-                                <a
-                                    href="https://github.com/login/oauth/authorize?client_id=7e5c9074f38b520b3e48&scope=user">Login
-                                    with GitHub</a>
+                            <!-- <a href="" class="btn"> -->
+                                <div class="btngithub">
+                                    <a
+                                    href="https://github.com/login/oauth/authorize?client_id=7e5c9074f38b520b3e48&scope=user">Login with GitHub</div>
                                 <script>
                                     // Function to extract the code from the URL
                                     function extractCode() {
@@ -190,13 +189,23 @@
                                             .catch((error) => {
                                                 console.error('Error:', error);
                                             });
-                                            // window.location.replace("http://localhost:{{.Port}}/")                                                
-                                       }
-                                    
+                                           }        
                                     const authCode = extractCode();
                                     if (authCode) {
                                         sendCodeToServer(authCode);
-                                        setTimeout(window.location.replace("http://localhost:{{.Port}}/"), 2000)
+
+                                    async function asyncCall() {
+                                      const result = await resolveAfter1Seconds();
+                                      window.location.replace("http://localhost:{{.Port}}/") 
+                                    }
+                                    asyncCall(); 
+                                    function resolveAfter1Seconds() {
+                                      return new Promise((resolve) => {
+                                        setTimeout(() => {
+                                          resolve('resolved');
+                                        }, 1500);
+                                      });
+                                    }  
                                     } else {
                                         console.log('Authorization code not found in the URL');
                                     }
@@ -259,8 +268,18 @@
                                             .then(response => response.json())
                                             .then(data => console.log('Success:', data))
                                             .catch((error) => console.error('Error:', error));  
-                                            window.location.replace("http://localhost:{{.Port}}/")
-                                        window.location.reload()
+                                            async function asyncCall() {
+                                      const result = await resolveAfter1Seconds();
+                                      window.location.replace("http://localhost:{{.Port}}/") 
+                                    }
+                                    asyncCall(); 
+                                    function resolveAfter1Seconds() {
+                                      return new Promise((resolve) => {
+                                        setTimeout(() => {
+                                          resolve('resolved');
+                                        }, 1500);
+                                      });
+                                    }   
                                     }
                                 </script>
                             </a><br><br>
