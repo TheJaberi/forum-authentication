@@ -33,6 +33,6 @@ func ErrorHandler(w http.ResponseWriter, req *http.Request, statusError int) {
 	if err != nil {
 		log.Fatalf("Files Not Parsed, 505")
 	}
-	w.WriteHeader(errResponse.StatusCode)
+	// w.WriteHeader(errResponse.StatusCode)
 	t.ExecuteTemplate(w, "error.html", errResponse)
 }

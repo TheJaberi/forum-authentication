@@ -2,6 +2,7 @@ package forum
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	bcrypt "golang.org/x/crypto/bcrypt"
@@ -37,8 +38,10 @@ func UserRegisteration(applicant Applicant, db *sql.DB) error {
 func UserLogin(email string, password string, RegType int) (*http.Cookie, error) {
 	// Validate User Existance
 	if UserExistsDb(email, RegType) != nil {
-		AllData.LoginErrorMsg = UserEmailError.Error()
-		return BlankCookie, UserEmailError
+		AllData.LoginErrorMsg = UserExistsError.Error()
+		fmt.Println("check2")
+		fmt.Println("check2")
+		return BlankCookie, UserExistsError
 	}
 	// Retrieves User Data
 	err := UserRetrieveDb(email, password)
@@ -72,13 +75,30 @@ func UserLogin(email string, password string, RegType int) (*http.Cookie, error)
 	return cookie, nil
 }
 
-func UserLoginAuth(email string, password string, RegType int) (*http.Cookie, error) {
+func UserLoginGoogleAuth(email string, password string, RegType int) (*http.Cookie, error) {
 	// Validate User Existance
 	if UserExistsDb(email, RegType) == UserExistsError {
 		AllData.LoginErrorMsg = UserEmailError.Error()
 		return BlankCookie, UserEmailError
 	} else if UserExistsDb(email, RegType) != nil {
 		appicant := Applicant{Username:RemoveEmailDetails(email), Email: email, Password: []byte(password), Reg_type: RegType}
+		UserRegisteration(appicant, DB)
+	}
+	cookies, err := UserLogin(email, password, RegType)
+	if err != nil {
+		return nil, err
+	}
+	return cookies, nil
+}
+
+func UserLoginGithubAuth(username string, email string, password string, RegType int) (*http.Cookie, error) {
+	// Validate User Existance
+	if UserExistsDb(email, RegType) == UserExistsError {
+		AllData.LoginErrorMsg = UserExistsError.Error()
+		fmt.Println("check1")
+		return BlankCookie, UserEmailError
+	} else if UserExistsDb(email, RegType) != nil {
+		appicant := Applicant{Username: username, Email: email, Password: []byte(password), Reg_type: RegType}
 		UserRegisteration(appicant, DB)
 	}
 	cookies, err := UserLogin(email, password, RegType)

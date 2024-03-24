@@ -5,8 +5,6 @@ import (
 	"fmt"
 	m "forum/model"
 	"net/http"
-	"html/template"
-
 )
 
 // Define a struct to match the incoming JSON structure
@@ -34,7 +32,7 @@ func HandlerReceiveCodeGoogle(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	cookie, err := m.UserLoginAuth(payload.Email, m.GooglePass, 1)
+	cookie, err := m.UserLoginGoogleAuth(payload.Email, m.GooglePass, 1)
 	if err != nil {
 		m.LoginError2 = true
 	} else {
@@ -42,16 +40,9 @@ func HandlerReceiveCodeGoogle(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, cookie)
 	fmt.Printf("Received Google Auth for user: %s\n", payload.Email)
-	t, err := template.ParseFiles("../view/index.html")
-	if err != nil {
-		ErrorHandler(w, r, http.StatusInternalServerError)
-		return
-	}
-	t.ExecuteTemplate(w, "index.html", m.AllData)
 	// Process the authentication payload as needed
 
 	// Respond to the request indicating success
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
-	http.Redirect(w, r, "/", http.StatusFound)
 }

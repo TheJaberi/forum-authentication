@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	m "forum/model"
 )
 
 // Assuming CLIENT_ID and CLIENT_SECRET are constants defined elsewhere
@@ -83,21 +84,31 @@ func HandlerReceiveCodeGithub(w http.ResponseWriter, req *http.Request) {
 	// 	fmt.Printf("Access Token: %s\n", tokenResponse.AccessToken)
 	// }
 	// Here, you could use the access token to perform API requests on behalf of the user
-	FetchUserInformation(tokenResponse.AccessToken)
+	username,_,_ := FetchUserInformation(tokenResponse.AccessToken)
 	CheckScopes(tokenResponse.AccessToken, []string{"user:email"})
-	FetchPrivateEmails(tokenResponse.AccessToken)
+	email, _,_ := FetchPrivateEmails(tokenResponse.AccessToken)
+	fmt.Println(email)
+	fmt.Println(username)
 	// Send a response back to the client indicating success
+	cookie, err := m.UserLoginGithubAuth(username, email, m.GithubPass, 2)
+	if err != nil {
+		m.LoginError2 = true
+	} else {
+		m.LoginError2 = false
+	}
+	http.SetCookie(w, cookie)
 	jsonResponse := map[string]string{"status": "received", "access_token": tokenResponse.AccessToken}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(jsonResponse)
+	http.Redirect(w, req, "/", http.StatusOK)
 }
 
 // FetchUserInformation fetches user information from GitHub using the access token
-func FetchUserInformation(accessToken string) (map[string]interface{}, error) {
+func FetchUserInformation(accessToken string) (string, map[string]interface{}, error) {
 	// Create the request to GitHub User API
 	req, err := http.NewRequest("GET", "https://api.github.com/user", nil)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 	// Include the access token in the Authorization header
 	req.Header.Add("Authorization", fmt.Sprintf("token %s", accessToken))
@@ -106,20 +117,20 @@ func FetchUserInformation(accessToken string) (map[string]interface{}, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 	defer resp.Body.Close()
 
 	// Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 
 	// Unmarshal the JSON response into a map
 	var userInfo map[string]interface{}
 	if err := json.Unmarshal(body, &userInfo); err != nil {
-		return nil, err
+		return "", nil, err
 	}
 	fmt.Print("Received Github Auth for user: ")
 	fmt.Println(userInfo)
@@ -127,7 +138,7 @@ func FetchUserInformation(accessToken string) (map[string]interface{}, error) {
 	fmt.Print(" with email: ")
 	// fmt.Println(userInfo)
 	// fmt.Println(userInfo["login"])
-	return userInfo, nil
+	return fmt.Sprint(userInfo["login"]), userInfo, nil
 }
 
 // CheckScopes checks if the required scope is present
@@ -144,30 +155,30 @@ func CheckScopes(scope string, requiredScopes []string) bool {
 }
 
 // FetchPrivateEmails fetches private emails from GitHub using the access token
-func FetchPrivateEmails(accessToken string) ([]map[string]interface{}, error) {
+func FetchPrivateEmails(accessToken string) (string, []map[string]interface{}, error) {
 	req, err := http.NewRequest("GET", "https://api.github.com/user/emails", nil)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 	req.Header.Add("Authorization", fmt.Sprintf("token %s", accessToken))
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 
 	var emails []map[string]interface{}
 	if err := json.Unmarshal(body, &emails); err != nil {
-		return nil, err
+		return "", nil, err
 	}
 	fmt.Println(emails[0]["email"])
 
-	return emails, nil
+	return ("test@gmail.com"), emails, nil
 }

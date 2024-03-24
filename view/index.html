@@ -148,7 +148,7 @@
                                 title="Enter your Email!" />
                             <label class="user-email">Email Address</label>
                             <div class="form-group">
-                                <input type="password" name="password" id="passIn" autocomplete="off" class="input"
+                                <input type="password" name="password" id="passInLogin" autocomplete="off" class="input"
                                     minlength="6" maxlength="25" required
                                     title="Your password must be between 6 to 25 long" />
                                 <label class="user-pass">Password</label>
@@ -256,8 +256,9 @@
                                         })
                                             .then(response => response.json())
                                             .then(data => console.log('Success:', data))
-                                            .catch((error) => console.error('Error:', error));
-
+                                            .catch((error) => console.error('Error:', error));  
+                                            window.location.replace("http://localhost:{{.Port}}/")
+                                        window.location.reload()
                                     }
                                 </script>
                             </a><br><br>
