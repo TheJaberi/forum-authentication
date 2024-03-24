@@ -11,14 +11,13 @@ import (
 // Receive new user data, validate and insert in user table
 func UserRegisteration(applicant Applicant, db *sql.DB) error {
 	err := RegisterValidator(applicant)
-	if err == UserExistsError {
+	if err == UsernameExistsError {
 		if applicant.Reg_type == 1 {
 			applicant.Username = applicant.Username + "(google)"
 		} else if applicant.Reg_type == 2 {
 			applicant.Username = applicant.Username + "(github)"
 		}
-	}
-	if err != nil {
+	} else if err != nil {
 		AllData.LoginErrorMsg = err.Error()
 		return err
 	}
@@ -39,8 +38,6 @@ func UserLogin(email string, password string, RegType int) (*http.Cookie, error)
 	// Validate User Existance
 	if UserExistsDb(email, RegType) != nil {
 		AllData.LoginErrorMsg = UserExistsError.Error()
-		fmt.Println("check2")
-		fmt.Println("check2")
 		return BlankCookie, UserExistsError
 	}
 	// Retrieves User Data

@@ -190,11 +190,13 @@
                                             .catch((error) => {
                                                 console.error('Error:', error);
                                             });
-                                    }
-
+                                            // window.location.replace("http://localhost:{{.Port}}/")                                                
+                                       }
+                                    
                                     const authCode = extractCode();
                                     if (authCode) {
                                         sendCodeToServer(authCode);
+                                        setTimeout(window.location.replace("http://localhost:{{.Port}}/"), 2000)
                                     } else {
                                         console.log('Authorization code not found in the URL');
                                     }
