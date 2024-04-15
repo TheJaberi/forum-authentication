@@ -15,6 +15,8 @@ func UserRegisteration(applicant Applicant, db *sql.DB) error {
 			applicant.Username = applicant.Username + "(google)"
 		} else if applicant.Reg_type == 2 {
 			applicant.Username = applicant.Username + "(github)"
+		} else {
+			return err
 		}
 	} else if err != nil {
 		AllData.LoginErrorMsg = err.Error()
